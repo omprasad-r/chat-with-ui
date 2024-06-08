@@ -1,0 +1,13 @@
+streamlit
+streamlit-chat
+openai
+python-dotenv
+##langchain enterprise data chat-bot requirements
+langchain
+sentence_transformers
+pinecone-client
+unstructured
+unstructured[docx]
+unstructured[pdf]
+docx2txt
+PyPDF2
