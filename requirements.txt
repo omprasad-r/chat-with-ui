@@ -4,10 +4,14 @@ openai
 python-dotenv
 ##langchain enterprise data chat-bot requirements
 langchain
+langchain-community
+langchain-core
 sentence_transformers
+pinecone
 pinecone-client
 unstructured
 unstructured[docx]
 unstructured[pdf]
 docx2txt
 PyPDF2
+bs4
