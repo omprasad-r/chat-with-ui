@@ -308,7 +308,7 @@ with col1:
             for i in range(len(st.session_state['responses'])):
                 message(st.session_state['responses'][i],key=str(i), logo=('https://pbs.twimg.com/profile_images/1545522461516697600/tvtfPSJV_400x400.jpg'))
                 if i < len(st.session_state['requests']):
-                    message(st.session_state["requests"][i], is_user=True,key=str(i)+ '_user', logo=('https://banner2.cleanpng.com/20180612/ih/kisspng-computer-icons-avatar-user-profile-clip-art-5b1f69f0e68650.4078880515287853929442.jpg'))
+                    message(st.session_state["requests"][i], is_user=True,key=str(i)+ '_user')
 
 with col2:
     image_response_container = st.container()
