@@ -1,8 +1,6 @@
 import openai
 import streamlit as st
 
-##Dinesh's key
-#openai.api_key = "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"
 
 ##def find_match(input):
 ##    input_em = model.encode(input).tolist()
