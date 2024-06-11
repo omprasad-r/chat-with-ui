@@ -20,7 +20,7 @@ from lc_utils import *
 from lc_vector_search import *
 import os
 
-st.set_page_config(layout="wide")
+#st.set_page_config(layout="wide")
 
 # show_pages(
 #     [
@@ -290,24 +290,10 @@ with col1:
                 #st.subheader("Refined Query:")
                 #st.write(refined_query)
                 context = find_match(refined_query)
+                print(context)  
                 response = conversation.predict(input=f"Context:\n {context} \n\n Query:\n{query}")
-                if "I don't know" in response:
-                    images_imageURI_response = ''
-                    images_imageTarget_response = ''
-                    images_caption_response = ''
-                    ref_links_response = ''
-                else:
-                    image_details = find_match_imageuri(refined_query)
-                    images_imageURI_response = image_details[0]
-                    images_imageTarget_response = image_details[1]
-                    images_caption_response = image_details[2]
-                    ref_links_response = image_details[3]
             st.session_state.requests.append(query)
             st.session_state.responses.append(response)
-            st.session_state.images_imageURI_response.append(images_imageURI_response)
-            st.session_state.images_imageTarget_response.append(images_imageTarget_response)
-            st.session_state.images_caption_response.append(images_caption_response)
-            st.session_state.ref_links_response.append(ref_links_response)
     with response_container:
         if st.session_state['responses']:
 
