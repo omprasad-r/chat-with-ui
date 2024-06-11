@@ -40,7 +40,7 @@ st.set_page_config(layout="wide")
 
 # add_page_title()  # Optional method to add title and icon to current page
 
-st.subheader("ABBOTT'S Brand Assistant")
+st.subheader("Advantage Experience Virtual Assist")
 
 ##Custom Styles
 custom_styles = """
