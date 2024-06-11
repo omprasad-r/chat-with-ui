@@ -56,7 +56,7 @@ def init_pinecone(selected_index):
 
 def find_match(query):
     print("-------------changed---------------")
-    docs,res = find_match_private(query,1)
+    docs,res = find_match_private(query,2)
     context= "\n\n".join(res)
     return context
 
