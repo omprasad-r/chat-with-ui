@@ -61,7 +61,7 @@ def find_match(query):
     query_embedding =  model.encode(query).tolist()
     context = index.query(
         vector=query_embedding,
-        top_k=1,
+        top_k=2,
         include_metadata=True
     )
     return context
@@ -72,8 +72,8 @@ def find_match_private(query,k):
     result = index.query(vector=query_em, top_k=k, includeMetadata=True)
     #print("index is ----- ",index_api_key)
     #print("result --",result)
-    #return [result['matches'][i]['metadata']['title'] for i in range(k)],[result['matches'][i]['metadata']['context'] for i in range(k)]
-    return result
+    return [result['matches'][i]['metadata']['title'] for i in range(k)],[result['matches'][i]['metadata']['context'] for i in range(k)]
+    #return result
 
 def find_match_imageuri(query):
     query_em = model.encode(query).tolist()
