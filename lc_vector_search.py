@@ -56,14 +56,8 @@ def init_pinecone(selected_index):
 
 def find_match(query):
     print("-------------changed---------------")
-    #docs,res = find_match_private(query,1)
-    #context= "\n\n".join(res)
-    query_embedding =  model.encode(query).tolist()
-    context = index.query(
-        vector=query_embedding,
-        top_k=2,
-        include_metadata=True
-    )
+    docs,res = find_match_private(query,1)
+    context= "\n\n".join(res)
     return context
 
 def find_match_private(query,k):
@@ -75,10 +69,10 @@ def find_match_private(query,k):
     return [result['matches'][i]['metadata']['title'] for i in range(k)],[result['matches'][i]['metadata']['context'] for i in range(k)]
     #return result
 
-def find_match_imageuri(query):
+def find_match_imageuri(query,k):
     query_em = model.encode(query).tolist()
     #print(query_em)
-    result = index.query(vector=query_em, top_k=1, includeMetadata=True)
+    result = index.query(vector=query_em, top_k=k, includeMetadata=True)
     #print("index is ----- ",index_api_key)
     #print("result --",result)
     imageuri =  '' 
