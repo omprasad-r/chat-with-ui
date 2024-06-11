@@ -67,29 +67,8 @@ def find_match_private(query,k):
     #print("index is ----- ",index_api_key)
     #print("result --",result)
     return [result['matches'][i]['metadata']['title'] for i in range(k)],[result['matches'][i]['metadata']['context'] for i in range(k)]
-    #return result
 
-def find_match_imageuri(query,k):
-    query_em = model.encode(query).tolist()
-    #print(query_em)
-    result = index.query(vector=query_em, top_k=k, includeMetadata=True)
-    #print("index is ----- ",index_api_key)
-    #print("result --",result)
-    imageuri =  '' 
-    imagetarget =  '' 
-    imageCaption =  '' 
-    refLinks =  '' 
-    if "imageURI" in result['matches'][0]['metadata'].keys():
-        imageuri =  result['matches'][0]['metadata']['imageURI']
-    if "imageTarget" in result['matches'][0]['metadata'].keys():
-        imagetarget =  result['matches'][0]['metadata']['imageTarget']
-    if "imageCaption" in result['matches'][0]['metadata'].keys():
-        imageCaption =  result['matches'][0]['metadata']['imageCaption']
-    if "refLinks" in result['matches'][0]['metadata'].keys():
-        refLinks =  result['matches'][0]['metadata']['refLinks']
-    metaresult = [imageuri,imagetarget,imageCaption,refLinks]
-    return metaresult
- 
+
 ###########-----------------------------add content to index--------------------------------############################
 
 def get_html_content(url):

@@ -20,7 +20,7 @@ from lc_utils import *
 from lc_vector_search import *
 import os
 
-#st.set_page_config(layout="wide")
+
 
 # show_pages(
 #     [
@@ -40,47 +40,7 @@ import os
 
 # add_page_title()  # Optional method to add title and icon to current page
 
-st.subheader("Advantage Experience Virtual Assist")
-
-##Custom Styles
-custom_styles = """
-                <style>
-                    div.stAlert{
-                        display:none;
-                    }
-                    div#media-outer-container{
-                        display:flex;
-                        flex-wrap:wrap;
-                        padding:0 5%;
-                    }
-                    div#media-outer-container .media-container{
-                        width:100%;
-                        flex:45%;
-                        padding:2.5%;
-                        margin:2.5%;
-                        height:460px;
-                        border:1px solid #ccc;
-                    }
-                    div#media-outer-container .media-container .image-caption{
-                        text-align:center;
-                    }
-                    div#media-outer-container .media-container .image-container{
-                        text-align:center;
-                        height:90%;
-                    }
-                    div#media-outer-container .media-container .image-container img{
-                        max-width:100%;
-                        vertical-align:middle;
-                        position:relative;
-                        top:50%;
-                        transform: translateY(-50%);
-                    }
-                    div#reflinks-container{
-                        padding:7%;
-                    }
-                </style>
-                """
-st.markdown(custom_styles, unsafe_allow_html= True)
+st.subheader("Advantage Experience Bot....!!")
 
 def refresh_ui():
     st.session_state['data_source'] = "--select--"
@@ -230,18 +190,6 @@ if 'responses' not in st.session_state:
 if 'requests' not in st.session_state:
     st.session_state['requests'] = []
 
-if 'images_imageURI_response' not in st.session_state:
-    st.session_state['images_imageURI_response'] = []
-
-if 'images_imageTarget_response' not in st.session_state:
-    st.session_state['images_imageTarget_response'] = []
-
-if 'images_caption_response' not in st.session_state:
-    st.session_state['images_caption_response'] = []
-
-if 'ref_links_response' not in st.session_state:
-    st.session_state['ref_links_response'] = []
-
 openai.api_key = os.getenv('OPENAI_API_KEY')
 if 'None' == os.getenv('OPENAI_API_KEY'):
     try:
@@ -262,83 +210,39 @@ prompt_template = ChatPromptTemplate.from_messages([system_msg_template, Message
 
 conversation = ConversationChain(memory=st.session_state.buffer_memory, prompt=prompt_template, llm=llm, verbose=True)
 
-col1, col2 = st.columns(2)
+# container for chat history
+response_container = st.container()
+# container for text box
+textcontainer = st.container()
 
-with col1:
-    # container for chat history
-    response_container = st.container()
-    # container for text box
-    textcontainer = st.container()
+with textcontainer:
 
-    with textcontainer:
+    if 'something' not in st.session_state:
+        st.session_state.something = ''
 
-        if 'something' not in st.session_state:
-            st.session_state.something = ''
+    def submit():
+        st.session_state.something = st.session_state.input
+        st.session_state.input = ''
 
-        def submit():
-            st.session_state.something = st.session_state.input
-            st.session_state.input = ''
+    st.text_input("Query: ", key="input", on_change=submit)
+    query = st.session_state.something
+    if query:
+        st.session_state.something = ''
+        with st.spinner("processing..."):
+            #conversation_string = get_conversation_string()
+            # st.code(conversation_string)
+            refined_query = query#query_refiner(conversation_string, query)
+            #st.subheader("Refined Query:")
+            #st.write(refined_query)
+            context = find_match(refined_query)
+            print(context)  
+            response = conversation.predict(input=f"Context:\n {context} \n\n Query:\n{query}")
+        st.session_state.requests.append(query)
+        st.session_state.responses.append(response) 
+with response_container:
+    if st.session_state['responses']:
 
-        st.text_input("Query: ", key="input", on_change=submit)
-        query = st.session_state.something
-        if query:
-            st.session_state.something = ''
-            with st.spinner("processing..."):
-                #conversation_string = get_conversation_string()
-                # st.code(conversation_string)
-                refined_query = query#query_refiner(conversation_string, query)
-                #st.subheader("Refined Query:")
-                #st.write(refined_query)
-                context = find_match(refined_query)
-                print(context)  
-                response = conversation.predict(input=f"Context:\n {context} \n\n Query:\n{query}")
-            st.session_state.requests.append(query)
-            st.session_state.responses.append(response)
-    with response_container:
-        if st.session_state['responses']:
-
-            for i in range(len(st.session_state['responses'])):
-                message(st.session_state['responses'][i],key=str(i), avatar_style="identicon",seed="Aneka")
-                if i < len(st.session_state['requests']):
-                    message(st.session_state["requests"][i], is_user=True,key=str(i)+ '_user')
-
-with col2:
-    image_response_container = st.container()
-    links_response_container = st.container()
-    with image_response_container:
-        if st.session_state['images_imageURI_response']:
-            image_response_length = len(st.session_state['images_imageURI_response']) - 1
-            image_url = st.session_state['images_imageURI_response'][image_response_length]
-            image_target = st.session_state['images_imageTarget_response'][image_response_length]
-            image_caption = st.session_state['images_caption_response'][image_response_length]
-
-            if image_url:
-                image_markup = """
-                    <div class='media-container'> 
-                        <div class='image-container'> 
-                            <a href='""" + image_target + """' target='_blank'><img src='""" + image_url + """' /></a> 
-                        </div> 
-                        <div class='image-caption'> 
-                            <span>""" + image_caption + """</span> 
-                        </div> 
-                    </div> 
-                    """
-                image_markup_container = """<div id='media-outer-container'>""" + image_markup + """</div>"""
-                st.markdown(image_markup_container,unsafe_allow_html= True)
-    with links_response_container:
-        if st.session_state['ref_links_response']:
-            reflinks_response_length = len(st.session_state['ref_links_response']) - 1
-            reference_link = st.session_state['ref_links_response'][reflinks_response_length]
-            if reference_link:
-                reflinks_markup = """
-                    <div class='ref-link-container'> 
-                        <div class='reflink'> 
-                            <b>Reference Links:</b> 
-                            <ul> 
-                                <li><a target=_blank' href='""" + reference_link + """'>""" + reference_link + """</a></li> 
-                            </ul> 
-                        </div> 
-                    </div> 
-                    """
-                reflink_markup_container = """<div id='reflinks-container'>""" + reflinks_markup + """</div>"""
-                st.markdown(reflink_markup_container,unsafe_allow_html= True)
+        for i in range(len(st.session_state['responses'])):
+            message(st.session_state['responses'][i],key=str(i), avatar_style="identicon",seed="Aneka")
+            if i < len(st.session_state['requests']):
+                message(st.session_state["requests"][i], is_user=True,key=str(i)+ '_user', avatar_style="bottts-neutral",seed="Oliver")
